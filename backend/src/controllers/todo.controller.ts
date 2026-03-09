@@ -5,12 +5,13 @@ export const createTodo = async (req: Request, res: Response) => {
   try {
 
     const { title, description, completed } = req.body;
+    const userId = req.auth!.payload.sub!;
 
     const todo = await Todo.create({
       title,
       description,
       completed,
-      userId: "demo-user"
+      userId
     });
 
     res.status(201).json(todo);
