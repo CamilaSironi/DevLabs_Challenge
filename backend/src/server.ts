@@ -1,5 +1,7 @@
 import "./models/todo";
 
+import todoRoutes from "./routes/todo.routes";
+
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -17,6 +19,8 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send(`API running`);
 });
+
+app.use("/api", todoRoutes);
 
 async function startServer() {
   try {
