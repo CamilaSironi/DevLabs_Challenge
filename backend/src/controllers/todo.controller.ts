@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { Todo } from "../models/todo";
 
-export const getTodos = async (req: Request, res: Response) => {
+export const getTodos = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.auth!.payload.sub!;
 
@@ -9,27 +9,28 @@ export const getTodos = async (req: Request, res: Response) => {
 
     res.status(200).json(todos);
   } catch (error) {
-    res.status(500).json(error);
+        next(error);
   }
 };
 
-export const getTodoById = async (req: Request, res: Response) => {
+export const getTodoById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const userId = req.auth!.payload.sub!;
 
     const todo = await Todo.findOne({ where: { id, userId } });
+
     if (!todo) {
-      return res.status(404).json({ message: "Todo not found" });
+        throw new Error("Todo not found");
     }
 
     res.status(200).json(todo);
   } catch (error) {
-    res.status(500).json(error);
+        next(error);
   }
 };
 
-export const createTodo = async (req: Request, res: Response) => {
+export const createTodo = async (req: Request, res: Response, next: NextFunction) => {
   try {
 
     const { title, description, completed } = req.body;
@@ -45,30 +46,31 @@ export const createTodo = async (req: Request, res: Response) => {
     res.status(201).json(todo);
 
   } catch (error) {
-    res.status(500).json(error);
+        next(error);
   }
 };
 
-export const updateTodo = async (req: Request, res: Response) => {
+export const updateTodo = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const { title, description, completed } = req.body;
     const userId = req.auth!.payload.sub!;
 
     const todo = await Todo.findOne({ where: { id, userId } });
+
     if (!todo) {
-      return res.status(404).json({ message: "Todo not found" });
+        throw new Error("Todo not found");
     }
 
     await todo.update({ title, description, completed });
 
     res.status(200).json(todo);
   } catch (error) {
-    res.status(500).json(error);
+        next(error);
   }
 };
 
-export const deleteTodo = async (req: Request, res: Response) => {
+export const deleteTodo = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const userId = req.auth!.payload.sub!;
@@ -82,6 +84,6 @@ export const deleteTodo = async (req: Request, res: Response) => {
 
     res.status(204).send();
   } catch (error) {
-    res.status(500).json(error);
+        next(error);
   }
 };

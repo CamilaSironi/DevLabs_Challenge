@@ -10,6 +10,8 @@ import express from "express";
 
 import { sequelize } from "./config/database";
 
+import { errorHandler } from "./middleware/error.middleware";
+
 const app = express();
 
 const port = process.env.PORT || 3000;
@@ -21,6 +23,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api", todoRoutes);
+
+app.use(errorHandler);
 
 async function startServer() {
   try {
