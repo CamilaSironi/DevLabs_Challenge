@@ -41,4 +41,21 @@ describe("POST /api/todos", () => {
     expect(response.body.description).toBe("Testing creation");
   });
 
+  it("should fail if title is missing", async () => {
+
+  const response = await request(app)
+    .post("/api/todos")
+    .send({
+      description: "Task without title",
+      completed: false
+    });
+
+  console.log(response.body);
+
+  expect(response.status).toBe(400);
+
+  expect(response.body).toHaveProperty("errors");
+
+});
+
 });
