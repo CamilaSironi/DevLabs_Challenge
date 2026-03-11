@@ -1,20 +1,16 @@
+import app from "./app";
+
 import "./models/todo";
 
 import dotenv from "dotenv";
 
 dotenv.config();
 
-import express from "express";
-
 import { sequelize } from "./config/database";
 
 import { errorHandler } from "./middleware/error.middleware";
 
-const app = express();
-
 const port = process.env.PORT || 3000;
-
-app.use(express.json());
 
 app.use(errorHandler);
 
